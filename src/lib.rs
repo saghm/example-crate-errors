@@ -1,3 +1,6 @@
+#[macro_use]
+extern crate error_chain;
+
 mod error;
 
 use std::char;
@@ -5,12 +8,12 @@ use std::i32;
 use std::io::{self, BufRead};
 use std::str::FromStr;
 
-use error::{Error, Result};
+use error::{ErrorKind, Result};
 
 /// Divides `num` by `denom`, returning an error if `denom` is zero.
 pub fn safe_divide(num: i32, denom: i32) -> Result<i32> {
     if denom == 0 {
-        return Err(Error::DivideByZero(num));
+        bail!(ErrorKind::DivideByZero(num));
     }
 
     return Ok(num / denom);
@@ -26,12 +29,12 @@ pub fn safe_divide_from_stdin() -> Result<i32> {
 
     let num = match split.next() {
         Some(s) => i32::from_str(s)?,
-        None => return Err(Error::InvalidInput(buf.clone())),
+        None => bail!(ErrorKind::InvalidInput(buf.clone())),
     };
 
     let denom = match split.next() {
         Some(s) => i32::from_str(s)?,
-        None => return Err(Error::InvalidInput(buf.clone())),
+        None => bail!(ErrorKind::InvalidInput(buf.clone())),
     };
 
     safe_divide(num, denom)
