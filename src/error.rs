@@ -69,3 +69,5 @@ impl StdError for Error {
         }
     }
 }
+
+>>>>>>> initial implementation
